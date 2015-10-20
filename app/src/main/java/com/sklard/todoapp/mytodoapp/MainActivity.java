@@ -13,6 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +25,29 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> itemsAdapter;
     ListView listviewItems;
     EditText editorNewItem;
+
+    private void readItems() {
+        File filesDir = getFilesDir();
+        File todoFile = new File(filesDir, "todo.txt");
+        try {
+            items = new ArrayList<String>(FileUtils.readLines(todoFile));
+        }
+        catch (IOException e) {
+            items = new ArrayList<String>();
+        }
+    }
+
+    private void writeItems() {
+        File filesDir = getFilesDir();
+        File todoFile = new File(filesDir, "todo.txt");
+        try {
+            FileUtils.writeLines(todoFile, items);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,26 +58,15 @@ public class MainActivity extends AppCompatActivity {
 
         editorNewItem = (EditText) findViewById(R.id.edittextNewItemName);
 
+        readItems();
+
         listviewItems = (ListView) findViewById(R.id.listView);
-        items = new ArrayList<>();
         itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         listviewItems.setAdapter(itemsAdapter);
-        items.add("Get milk");
-        items.add("Drink milk");
 
         setupListInteraction();
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });  */
-
     }
+
 
     private void setupListInteraction() {
         listviewItems.setOnItemLongClickListener(
@@ -59,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         items.remove(position);
                         itemsAdapter.notifyDataSetChanged();
+                        writeItems();
                         return true;
                     }
                 }
@@ -91,5 +108,6 @@ public class MainActivity extends AppCompatActivity {
         String strNewItem = editorNewItem.getText().toString();
         itemsAdapter.add(strNewItem);
         editorNewItem.setText("");
+        writeItems();
     }
 }
