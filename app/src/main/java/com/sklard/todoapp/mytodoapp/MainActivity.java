@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView listviewItems;
+    EditText editorNewItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        editorNewItem = (EditText) findViewById(R.id.edittextNewItemName);
 
         listviewItems = (ListView) findViewById(R.id.listView);
         items = new ArrayList<>();
@@ -65,5 +69,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClickToAddItem(View view) {
+        String strNewItem = editorNewItem.getText().toString();
+        itemsAdapter.add(strNewItem);
+        editorNewItem.setText("");
     }
 }
