@@ -1,5 +1,6 @@
 package com.sklard.todoapp.mytodoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     ListView listviewItems;
     EditText editorNewItem;
 
+    static final int EDIT_ITEM_REQUEST = 101;
+
     private void readItems() {
         File filesDir = getFilesDir();
         File todoFile = new File(filesDir, "todo.txt");
@@ -50,6 +53,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == EDIT_ITEM_REQUEST) {
+                String newValue = data.getExtras().getString("result");
+                int pos = data.getExtras().getInt("position");
+                items.set(pos, newValue);
+                itemsAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -69,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupListInteraction() {
+
+        // LONG PRESS means "Remove this item."
         listviewItems.setOnItemLongClickListener(
                 new AdapterView.OnItemLongClickListener() {
                     @Override
@@ -77,6 +95,20 @@ public class MainActivity extends AppCompatActivity {
                         itemsAdapter.notifyDataSetChanged();
                         writeItems();
                         return true;
+                    }
+                }
+        );
+
+        // REGULAR CLICK means "Let me edit this item"
+        listviewItems.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
+                        intent.putExtra("text", itemsAdapter.getItem(position));
+                        intent.putExtra("position", position);
+                        intent.putExtra("itemID", id);
+                        startActivityForResult(intent, EDIT_ITEM_REQUEST);
                     }
                 }
         );
