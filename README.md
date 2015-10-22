@@ -20,5 +20,11 @@ I sent email explaining licecap's failure to be able to capture images on an aux
 phone screen is too large to fit on my mac's screen, thus requiring me to use an aux screen, licecapture 
 is thus impossible with my hardware/OS/licecap configuration.
 
+### Issues / Questions
+
+1) Would be nice to have an emulator that supports scaling down so the phone screen can fit on my mac.  How can
+one facilitate such?
+
+2) I could not figure out how to give a title to my "edit item" screen.  I'd love to learn how to do so.
 
 
