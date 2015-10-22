@@ -27,4 +27,6 @@ one facilitate such?
 
 2) I could not figure out how to give a title to my "edit item" screen.  I'd love to learn how to do so.
 
+3) I saw your suggested .gitignore too late and probably committed many derived files that should not
+be present in github, my apologies!
 
